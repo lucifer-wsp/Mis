@@ -1,15 +1,17 @@
-const express = require('express');
-const app = express();
-const user = require('./user')
+var bodyParser = require('body-parser');
+var user = require('./user');
+var app = require('./app');
 
-app.post('/serarch', function(req, res){
-	var pid = req.body['pid'];
-	console.log(pid);
-	user.get_user_info(pid, function(err,result){
-
-	});
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.post('/search', function(req, res){
+    var pid = req.param('pid');
+    console.log(pid);
+    user.get_user_info(pid)
+        .then(data => {
+            //var result = JSON.stringify(data);
+            res.json({result: data});
+        });
 });
 
-
-app.listen(3000);
 
