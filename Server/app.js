@@ -5,6 +5,10 @@ var user = require('./user');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.all('*', function(req, res, next){
+	res.header('Access-Control-Allow-Origin', '*');
+	next();
+});
 app.post('/search', function(req, res){
     var pid = req.param('pid');
     console.log(pid);
@@ -16,9 +20,6 @@ app.post('/search', function(req, res){
 });
 
 
-
 app.listen(3000);
 
-app.all('*', function(req, res, next){
-	res.header('Access-Control-Allow-Origin', '*');
-});
+console.log('listening  3000 port...');
