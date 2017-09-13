@@ -10,7 +10,7 @@ exports.get_user_info = function (pid){
             port:'3306',
             database:'Splmm'
         });
-        var sel_sql = 'select * from mis_info where pid = ' + pid + ';';
+        var sel_sql = 'select pid,detail_info,from_unixtime(timestamp) as timestamp from mis_info where pid = ' + pid + ';';
 
         mysql_conn.connect();
         mysql_conn.query(sel_sql, function(err, result){
