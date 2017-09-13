@@ -54,15 +54,16 @@
             function post_req(pid_value){
                 if(pid_value){
                     $.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
+                        console.log(result);
+                        var data = result;
                         $('#dg').DataTable({
                             searching: false,
-                            sorting: false,
                             destroy: true,
-                            data:result,
+                            data:data,
                             columns: [
-                                { result: 'pid' },
-                                { result: 'detail_info' },
-                                { result: 'timestamp' }
+                                {data: 'pid'},
+                                {data: 'detail_info'},
+                                {data: 'timestamp'}
                             ]
                             });
                     });
