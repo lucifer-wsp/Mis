@@ -9,7 +9,7 @@
         <script>
             $(document).ready(
                 function(){
-                    $('#dg').dataTable();
+                    $('#dg').DataTable();
                     $("#search_btn").click(
                         function(){
                             var pid_value = $("#keyword_txt").val();
@@ -65,12 +65,16 @@
 
             function post_req(pid_value){
                 if(pid_value){
-                    //$.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
-                        //var data = result.result;
-                        var data = [{'chk_sel': '<input type="checkbox">','pid':1,'detail_info':'1','timestamp': 1}];
+                    $.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
+                        var data = result.result;
+                        var data = [{'pid':1,'detail_info':'1','timestamp': 1}];
+
+                        for(var i = 0;i < data.length; i++){
+                            data[0].append({'chk_sel': '<input type="checkbox">'});
+                        }
                         console.log(data);
-                        $('#dg').dataTable().fnClearData();
-                        $('#dg').dataTable({
+                        
+                        $('#dg').DataTable({
                             searching: false,
                             sorting: false,
                             destroy: true,
@@ -84,7 +88,7 @@
                                 {data: 'timestamp'}
                             ]
                             });
-                    //});
+                    });
                 }
             }
         </script>
