@@ -10,7 +10,8 @@
                     var pid = $("#keyword_txt").val();
                     //console.log(pid);
                     if(true == check_in(pid)){
-                        location.href='./result_list.html?pid=' + pid;
+                        sessionStorage.setItem('pid', pid);
+                        location.href='./result_list.html';
                     }else{
                         alert('input error, format must be 18812345678 or 029-12345678');
                     }
