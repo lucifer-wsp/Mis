@@ -11,7 +11,6 @@
         <script>
             $(document).ready(
                 function(){
-                    console.log('ready..');
                     //表格初始化
                     $('#dg').DataTable({
                         searching: false,
@@ -60,7 +59,6 @@
                                 return ;
                             }
                             post_req(pid_value);
-                            console.log('search');
                         }
                     );
                     //打印
@@ -69,20 +67,25 @@
                             var data = $('#dg').DataTable().rows('.selected').data();
                             var width = $(window).width() * 0.4 ;
                             var height = $(window).height() * 0.8;
-                            console.log('data len: %s.', data.length);
-                            var inner_html = '<div>';
+                            //console.log('data len: %s.', data.length);
+                            var inner_html = '';
                             for(var i = 0; i < data.length; i ++){
                                 console.log(data[i]);
-                                for(var j = 0; j < data[i].length; j++){
-                                    console.log(i);
-                                    console.log(j);
-                                    console.log(data[i][j]);
-                                    inner_html += '<p style="text-align: center">' + data[i][j] + '</p>';
+                                inner_html += '<div>';
+                                for(var j = 1; j < data[i].length; j++){
+                                    if(data[i][j]){
+                                        inner_html += '<p style="text-align: center">' + data[i][j].replace(/<\/?[^>]*>/g,'') + '</p>';
+                                    }
                                 }
+                                if(!data[i][1]){
+                                    inner_html += '<p style="text-align: center">' + data[i]['pid'].replace(/<\/?[^>]*>/g,'') + '</p>';
+                                    inner_html += '<p style="text-align: center">' + data[i]['detail_info'].replace(/<\/?[^>]*>/g,'') + '</p>';
+                                    inner_html += '<p style="text-align: center">' + data[i]['timestamp'].replace(/<\/?[^>]*>/g,'') + '</p>';
+                                }
+                                inner_html += '<p style="page-break-after: always;">&nbsp;</p></div>';
                             }
-                            inner_html += '</div>'
-                            console.log(inner_html);
-                            
+                            inner_html = '<div>' + inner_html + '</div>';
+                            //console.log(inner_html);
                             var d = dialog({
                                 id: 'print_dialog',
                                 title: '打印',
@@ -91,7 +94,8 @@
                                 okValue: '确定打印',
                                 autofocus: false,
                                 ok: function(){
-                                    
+                                    print_me(inner_html);
+                                    return true;
                                 },
                     
                                 cancle: function(){}
@@ -99,19 +103,25 @@
                             .height(height)
                             .blur();
                             d.showModal();
-                            
-                            //dialog.get('print_dialog').button().setText('change');
-                            //console.log();
-                            //dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor('#00a57f');
-                            //dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor('#00a57f'); 
                         }
                     );
+
+                    function print_me(inner_html){
+                        var inner_html_copy = inner_html;
+                        setTimeout(function () {
+                            console.log(inner_html_copy);
+                            var old_body = document.body.innerHTML;
+                            document.body.innerHTML = inner_html_copy;
+                            window.print();
+                            document.body.innerHTML = old_body;
+                            window.location.reload();
+                        }, 800);
+                    }
                 }
             );
             //页面加载完成
             $(window).on('load', function (){
                 var pid_value = sessionStorage.getItem('pid');
-                console.log(pid_value);
 
                 if(pid_value && check_in(pid_value)){
                     $("#keyword_txt").val(pid_value);
@@ -133,23 +143,22 @@
                 if(pid_value){
                     $.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
                         var data = result.result;
-                        var data = [{'pid':18710619804,'detail_info':'水平滚动条， 垂直滚动条， 水平和垂直滚动条， ps：开启滚动条后，DT会把thead和tbody分为两个table来显示，如果发现有两个表头或者是列和表头对应不齐， 大多数情况是因为css冲突导致，建议把其他css先去掉，排除法找到冲突的css。关于表头缩在一起的问题可以参考 #9或许能有所启发','timestamp': '2017-09-14 10:00:00'}, 
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    ];
+                        //var data = [{'pid':18710619804,'detail_info':'水平滚动条， 垂直滚动条， 水平和垂直滚动条， //ps：开启滚动条后，DT会把thead和tbody分为两个table来显示，如果发现有两个表头或者是列和表头对应不齐， //大多数情况是因为css冲突导致，建议把其他css先去掉，排除法找到冲突的css。关于表头缩在一起的问题可以参考 #9或许能有所启发','timestamp': '2017-09-14 10:00:00'}, 
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            ];
 
                         for(var i = 0;i < data.length; i++){
                             data[i]['num'] = i + 1;
                         }
-                        console.log(data);
                         
                         $('#dg').DataTable({
                             searching: false,
@@ -178,7 +187,6 @@
                                 {data: 'pid'},
                                 {data: 'detail_info', 
                                  render: function(data, type, row, meta){
-                                    console.log(data);
                                     return '<div id="a" style="height: 20px; overflow: hidden;text-overflow: ellipsis;" title="'+ data + '">' + data + '</div>';
                                  }
                                 },
