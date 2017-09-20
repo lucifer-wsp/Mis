@@ -1,11 +1,13 @@
 <html>
     <link rel="icon" href="./Icon/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="./DataTables-1.10.15/media/css/jquery.dataTables.min.css"/>
-    <link rel='stylesheet' type='text/css' href='./css/buttons.css' />
+    <!--link rel='stylesheet' type='text/css' href='./css/buttons.css' /!-->
+    <link rel='stylesheet' type='text/css' href='./artDialog-master/css/dialog.css'>
     <title>Splovem</title>
     <head>
         <script src='./JQuery/jquery-3.2.1.min.js' type='text/javascript'></script>
         <script type="text/javascript" src="./DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+        <script type='text/javascript' src='./artDialog-master/dist/dialog.js'></script>
         <script>
             $(document).ready(
                 function(){
@@ -13,32 +15,38 @@
                     //表格初始化
                     $('#dg').DataTable({
                         searching: false,
-                            sorting: false,
-                            destroy: true,
-                            "bSort" : false,
-                            "bProcessing" : true,  
-                            'cell-border': true,
-                            'aLengthMenu': [5,10,20,40],
-                            scrollCollapse: true,
-                            scrollY: 300,
-                            "oLanguage": {
-                                "oPaginate": {
-                                    "sNext": "下一页",
-                                    "sPrevious": "上一页"
-                                },
-                                 "sInfo": "共 <code>_TOTAL_</code> 结果 当前显示 (<code>_START_</code> - <code>_END_</code>)",
-                                "sEmptyTable": "表中无可用记录",
-                                "sLengthMenu": "显示 _MENU_ 记录",
-                                "sInfoFiltered": "(从 <code>_MAX_</code>条记录中过滤)",
-                                "sInfoEmpty": "共 <code>0</code> 结果 当前显示 (<code>0</code> - <code>0</code>)"
-                            }
+                        sorting: false,
+                        destroy: true,
+                        "bSort" : false,
+                        "bProcessing" : true,  
+                        'cell-border': true,
+                        'aLengthMenu': [5,10,20,40],
+                        scrollCollapse: true,
+                        scrollY: 300,
+                        "oLanguage": {
+                            "oPaginate": {
+                                "sNext": "下一页",
+                                "sPrevious": "上一页"
+                            },
+                             "sInfo": "共 <code>_TOTAL_</code> 结果 当前显示 (<code>_START_</code> - <code>_END_</code>)",
+                            "sEmptyTable": "表中无可用记录",
+                            "sLengthMenu": "显示 _MENU_ 记录",
+                            "sInfoFiltered": "(从 <code>_MAX_</code>条记录中过滤)",
+                            "sInfoEmpty": "共 <code>0</code> 结果 当前显示 (<code>0</code> - <code>0</code>)"
+                        }
                     });
                     //表格选中
                     $('#dg').on('click', 'tr', function(){
                         var data = $('#dg').DataTable().data();
-                        console.log(data);
+                        //console.log(data);
                         if(data.length){
                             $(this).toggleClass('selected');
+                        }
+                        var sel_data = $('#dg').DataTable().rows('.selected').data();
+                        if(sel_data.length){
+                            $('#print_btn').attr('disabled', false);
+                        }else{
+                            $('#print_btn').attr('disabled', true);
                         }
                     });
                     //点击search
@@ -59,9 +67,43 @@
                     $("#print_btn").click(
                         function (){
                             var data = $('#dg').DataTable().rows('.selected').data();
-                            for(var i = 0;i < data.length; i++){
+                            var width = $(window).width() * 0.4 ;
+                            var height = $(window).height() * 0.8;
+                            console.log('data len: %s.', data.length);
+                            var inner_html = '<div>';
+                            for(var i = 0; i < data.length; i ++){
                                 console.log(data[i]);
+                                for(var j = 0; j < data[i].length; j++){
+                                    console.log(i);
+                                    console.log(j);
+                                    console.log(data[i][j]);
+                                    inner_html += '<p style="text-align: center">' + data[i][j] + '</p>';
+                                }
                             }
+                            inner_html += '</div>'
+                            console.log(inner_html);
+                            
+                            var d = dialog({
+                                id: 'print_dialog',
+                                title: '打印',
+                                content: inner_html,
+                                //quickClose: true,
+                                okValue: '确定打印',
+                                autofocus: false,
+                                ok: function(){
+                                    
+                                },
+                    
+                                cancle: function(){}
+                            }).width(width)
+                            .height(height)
+                            .blur();
+                            d.showModal();
+                            
+                            //dialog.get('print_dialog').button().setText('change');
+                            //console.log();
+                            //dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor('#00a57f');
+                            //dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor('#00a57f'); 
                         }
                     );
                 }
@@ -89,8 +131,8 @@
             //发送ajax请求
             function post_req(pid_value){
                 if(pid_value){
-                    //$.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
-                        //var data = result.result;
+                    $.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
+                        var data = result.result;
                         var data = [{'pid':18710619804,'detail_info':'水平滚动条， 垂直滚动条， 水平和垂直滚动条， ps：开启滚动条后，DT会把thead和tbody分为两个table来显示，如果发现有两个表头或者是列和表头对应不齐， 大多数情况是因为css冲突导致，建议把其他css先去掉，排除法找到冲突的css。关于表头缩在一起的问题可以参考 #9或许能有所启发','timestamp': '2017-09-14 10:00:00'}, 
                                     {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
                                     {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
@@ -143,7 +185,7 @@
                                 {data: 'timestamp'}
                             ]
                         });
-                    //});
+                    });
                 }
             }
           
@@ -151,15 +193,45 @@
         <style>
             .search_btn_cls { width: 45%; height: 28px; border: none; background: #00a57f; outline: none; }
             .search_btn_cls:hover {background: #00b38a;}
-            .print_btn_cls { width: 250px; height: 65px; border: none; background: #00a57f; outline: none; font-size: 25px; font-family: "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", "Lucida Grande", "sans-serif"; }
-            .print_btn_cls:hover {background: #00b38a;}
+            
+            .print_btn_cls {
+        
+                height:65px;
+                width:250px;
+                border:0px solid #00a57f;
+                background:#00a57f;
+                
+                background:-moz-linear-gradient(top, #00a57f, #00b38a);
+                background:-webkit-gradient(linear, left top, left bottom, from(#00a57f), to(#00b38a));
+                -moz-border-radius:5px;
+                -webkit-border-radius:5px;
+                border-radius:5px;
+                -moz-box-shadow:0px 0px 5px #000;
+                -webkit-box-shadow:0px 0px 5px #000;
+                box-shadow:0px 0px 5px #000;
+                
+                font-family:'AirstreamRegular', Georgia, 'Times New Roman', serif;
+                color:#e5edff;
+                text-shadow:0px 0px 5px rgba(0, 0, 0, 0.7);
+                font-size:30px;
+            }
+            .print_btn_cls:hover, .print_btn_cls:focus {
+                background:-moz-linear-gradient(top, #00b38a, #00b38a);
+                background:-webkit-gradient(linear, left top, left bottom, from(#00b38a), to(#00b38a));
+            }
+            .print_btn_cls:disabled {
+
+                background:-moz-linear-gradient(top, #ccd, #ccd);
+                background:-webkit-gradient(linear, left top, left bottom, from(#ccd), to(#ccd));
+            }
+            
         </style>
     </head>
 
     <body>
         <meta http-equit='Access-Control-Allow-Origin' content='*' />
         <div id='top' style='' >
-            <div style='float: left; width: 30%; '>
+            <div style='float: left; width: 30%; hight: 50px;'>
                 <a href='./index.html'><img src='./Icon/splmm.ico' style='width: 20%;' /></a>
             </div>
             <div style='float: left; width: 60%; hight: 50px; position: absolute; top: 30px; right: 0px;'>
@@ -186,7 +258,7 @@
                 </tbody>
             </table>
             <div style='text-align: center;'>
-                <input type='button' id='print_btn' class='print_btn_cls' value='打印选中' />
+                <input type='button' id='print_btn' class='button print_btn_cls' disabled='disabled' value='打印选中' />
             </div>
         </div>
 
