@@ -1,12 +1,9 @@
 {
 	"appenders": 
-	[
 		{
 			"type": "file",
 			"level": "INFO",
 			"category": "app",
 			"filename": "/opt/log/run.log"
-		},
-		{"type": "console"}
-	]
+		}
 }
