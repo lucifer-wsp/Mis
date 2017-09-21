@@ -3,21 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var user = require('./user');
 var log4js = require('log4js');
+var log4js_json = require('./log4js.json');
 
 
-log4js.configure({
-	appenders: [{
-		type: 'loglevelFilter',
-		level: 'INFO',
-		category: 'app',
-		appener: {
-			type: 'file',
-			filename: '/opt/log/run.log'
-		}
-	},
-	{type: 'console'}
-	]
-});
+log4js.configure(log4js_json);
 var app_log = log4js.getLogger('app');
 app.use(log4js.connectLogger(app_log, {level: log4js.levels.INFO}));
 
