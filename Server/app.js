@@ -6,8 +6,8 @@ var log4js = require('log4js');
 var log4js_json = require('./log4js.json');
 
 
-log4js.configure(log4js_json);
-var app_log = log4js.getLogger('app');
+//log4js.configure(log4js_json);
+var app_log = log4js.getLogger();
 app.use(log4js.connectLogger(app_log, {level: log4js.levels.INFO}));
 
 app.use(bodyParser.urlencoded({extended: false}));
