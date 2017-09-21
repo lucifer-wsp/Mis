@@ -135,20 +135,20 @@
             //发送ajax请求
             function post_req(pid_value){
                 if(pid_value){
-                    //$.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
-                        //var data = result.result;
-                        var data = [{'pid':18710619804,'detail_info':'水平滚动条， 垂直滚动条， 水平和垂直滚动条， //ps：开启滚动条后，DT会把thead和tbody分为两个table来显示，如果发现有两个表头或者是列和表头对应不齐， //大多数情况是因为css冲突导致，建议把其他css先去掉，排除法找到冲突的css。关于表头缩在一起的问题可以参考 #9或许能有所启发','timestamp': '2017-09-14 10:00:00'}, 
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
-                                    ];
+                    $.post("http://www.splovem.com/search", {pid: pid_value}, function(result){
+                        var data = result.result;
+                        //var data = [{'pid':18710619804,'detail_info':'水平滚动条， 垂直滚动条， 水平和垂直滚动条， //ps：开启滚动条后，DT会把thead和tbody分为两个table来显示，如果发现有两个表头或者是列和表头对应不齐， ////大多数情况是因为css冲突导致，建议把其他css先去掉，排除法找到冲突的css。关于表头缩在一起的问题可以参考 #9或许能有所启发','timestamp': '2017-09-14 10:00:00'}, 
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            {'pid':18710619804,'detail_info':'1','timestamp': '2017-09-14 10:00:00'},
+                        //            ];
 
                         for(var i = 0;i < data.length; i++){
                             data[i]['num'] = i + 1;
@@ -187,7 +187,7 @@
                                 {data: 'timestamp'}
                             ]
                         });
-                    //});
+                    });
                 }
             }
           
