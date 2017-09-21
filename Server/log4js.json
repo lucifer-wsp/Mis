@@ -1,13 +1,12 @@
 {
-	"appenders": [{
-		"type": "loglevelFilter",
-		"level": "INFO",
-		"category": "app",
-		"appenders": {
+	"appenders": 
+	[
+		{
 			"type": "file",
+			"level": "INFO",
+			"category": "app",
 			"filename": "/opt/log/run.log"
-		}
-	},
-	{"type": "console"}
+		},
+		{"type": "console"}
 	]
 }
