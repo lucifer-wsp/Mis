@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var user = require('./user');
 var log4js = require('log4js');
-var log4js_json = require('./log4js.json');
+//var log4js_json = require('./log4js.json');
 
 
 //log4js.configure(log4js_json);
