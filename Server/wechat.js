@@ -71,7 +71,7 @@ function createQr(access_token){
                 "Content-Length": post_data.length
             }
         };
-        cosole.log(options);
+        console.log(options);
         var qr_req = https.request(options, function(res){
             console.log(res.statusCode);
             res.on('data', function(chunk){
