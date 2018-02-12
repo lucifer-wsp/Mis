@@ -54,7 +54,7 @@ app.post('/wechat', function(req, res){
     res.end();
 });
 
-app.get('/createQr', function(req, resp){
+app.get('/createQr', function(req, res){
     wechat.wechat_get_Qr()
         .then(data => {
             res.json(data);
