@@ -1,18 +1,34 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var user = require('./user');
 var log4js = require('log4js');
+var http = require('http');
+
+var user = require('./user');
+var wechat = require('./wechat');
+
 require('body-parser-xml')(bodyParser);
+
+log4js.configure({
+    appenders: {
+        default: { type: 'dateFile', filename: 'logs/access', 
+                    pattern: '_yyyy_MM_dd.log', alwaysIncludePattern: true },
+        error: { type: 'dateFile', filename: 'logs/error', 
+                    pattern: '_yyyy_MM_dd.log', alwaysIncludePattern: true },
+        out: {type: 'console'},
+    },
+    categories: {
+        default: { appenders: ['out', 'default'], level: 'info' },
+        error: { appenders: ['error'], level: 'error' }
+    }
+});
+const info_logger = log4js.getLogger('out');
+const err_logger = log4js.getLogger('error');
+console.log = info_logger.info.bind(info_logger);
+console.error = err_logger.error.bind(err_logger);
+
 var app = express();
-//var log4js_json = require('./log4js.json');
-
-
-//log4js.configure(log4js_json);
-var app_log = log4js.getLogger();
-app.use(log4js.connectLogger(app_log, {level: log4js.levels.INFO}));
-
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.xml({
   limit: '1MB',   // Reject payload bigger than 1 MB
   xmlParseOptions: {
@@ -25,36 +41,26 @@ app.all('*', function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
     next();
 });
+
 //微信数据格式均为xml
 app.get('/wechat', function(req, res){
-  console.log('wechat...');
-  console.log(req.query.echostr);
-  res.status(200);
-  //res.type("application/xml");
-  //let content = "妹子找！";
-  //let resMsg = "<xml><ToUserName><![CDATA[" + "oSOixwg5RRK40Vq5DKUKjxP2LX5w" + "]]></ToUserName><FromUserName><![CDATA[" + "gh_2265890e6f31" + "]]></FromUserName><CreateTime>" + parseInt(new Date().valueOf() / 1000) + "</CreateTime><MsgType><![CDATA[" + "text" + "]]></MsgType><Content><![CDATA[" + content + "]]></Content></xml>";
-  //let resMsg = "";
-  //console.log(resMsg);
-  //res.send(resMsg);
-  res.send(req.query.echostr)
+  console.log('get wechat ...');
+  res.send(wechat.wechat_auth(req));
   res.end();
-  //res.json({"echostr": req.query.echostr});
 });
 
 app.post('/wechat', function(req, res){
-  console.log('post wechat');
-  console.log(req.body.xml);
-  console.log(req.url);
-  let data = req.body.xml;
-  let content = "大爷，来玩儿呀～";
-  let msgType = "text";
-  let resMsg = "<xml><ToUserName><![CDATA[" + data.fromusername + "]]></ToUserName><FromUserName><![CDATA[" + data.tousername + "]]></FromUserName><CreateTime>" + parseInt(new Date().valueOf() / 1000) + "</CreateTime><MsgType><![CDATA[" + msgType + "]]></MsgType><Content><![CDATA[" + content + "]]></Content></xml>";
-  res.status(200);
-  res.type('application/xml');
-  console.log(resMsg);
-  res.send(resMsg);
-  //console.log(res);
-  res.end();
+    res.send(wechat.wechat_reply(req));
+    res.end();
+});
+
+app.get('/createQr', function(req, resp){
+    wechat.wechat_get_Qr()
+        .then(data => {
+            res.json(data);
+        }).catch(err => {
+            res.json({'error': err});
+        });
 });
 
 app.post('/search', function(req, res){
@@ -64,6 +70,8 @@ app.post('/search', function(req, res){
         .then(data => {
             //var result = JSON.stringify(data);
             res.json({result: data});
+        }).catch(err => {
+            res.json({'error': err});
         });
 });
 app.listen(3000);
