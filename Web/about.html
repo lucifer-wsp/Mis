@@ -3,11 +3,11 @@
         <title>关于</title>
         <script src='./JQuery/jquery-3.2.1.min.js' type='text/javascript'></script> 
         <script>
+            /*
             $(document).ready(function (){
-                var w = $(window).width() * 0.75;
-                var l = $(window).width() * 0.35;
-                var t = $(window).height() * 0.125;
-                $('#img_back').offset({left: l, top: top});
+                var l = $(window).width() * 0.25;
+                var t = $(window).height() * 0.25;
+                $('#img_back').offset({left: l, top: t});
             });
             $(window).on('load', function(){
                 $.get('http://www.splovem.com/createQr', function(result){
@@ -16,12 +16,13 @@
                     
                     $('#img_Qr').attr('src', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+img_url);
                 });
-            });
+            });*/
         </script>
     </head>
     <body>
-        <div id='img_back'>
-            <img id='img_Qr' src='' style='width: 400; display: block; margin: 0;' align='middle'/>
+        <div id='img_back' style='text-align: center;'>
+            <img id='img_Qr' src='https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQEI8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAycEIyVnhDcy1jYWoxeFVha05xMTUAAgRY7pNaAwQgHAAA' style='width: 40%; '/>
+            <h2>请扫面上方二维码关注Splmm</h2>
         </div>
     </body>
 </html>
